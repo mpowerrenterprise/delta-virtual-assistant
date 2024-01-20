@@ -51,7 +51,7 @@ def email_spell():
 
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        mixer.music.load('Sound_Effects/sound0.mp3')
+        mixer.music.load('sound-effects/sound0.mp3')
         mixer.music.play()
         time.sleep(0)
 
@@ -87,7 +87,7 @@ def email_content():
 
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        mixer.music.load('Sound_Effects/sound0.mp3')
+        mixer.music.load('sound-effects/sound0.mp3')
         mixer.music.play()
         time.sleep(0)
 
@@ -145,7 +145,7 @@ def myCommand():
     r = sr.Recognizer() 
     query = ""                                                                                  
     with sr.Microphone() as source: 
-        mixer.music.load('Sound_Effects/sound0.mp3')
+        mixer.music.load('sound-effects/sound0.mp3')
         mixer.music.play()                                                                      
         print("Listening...")
         r.pause_threshold =  1
