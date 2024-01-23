@@ -1,9 +1,11 @@
 import sys
 import pyttsx3
+import datetime
 import threading
 from pygame import mixer
 from PyQt5.QtGui import QMovie
 import speech_recognition as sr
+from asset.responser import Responser
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
 
@@ -11,6 +13,24 @@ mixer.init()
 engine = pyttsx3.init()
 lastQuery = "Start"
 isDeltaStarted = False
+
+responseEngine = Responser()
+
+def greeting_function():
+
+    greeting = ""
+
+    currentHour = int(datetime.datetime.now().hour)
+    if currentHour >= 0 and currentHour < 12:
+        greeting = 'Good Morning!'
+
+    if currentHour >= 12 and currentHour < 18:
+        greeting = 'Good Afternoon!'
+
+    if currentHour >= 18 and currentHour !=0:
+        greeting = 'Good Evening!'
+
+    return greeting
 
 def speech_text(self, text):
     global lastQuery
@@ -20,9 +40,8 @@ def speech_text(self, text):
     engine.runAndWait()
     self.update_signal.emit(f"standby_screen")
    
-def responser(self, query):
-    if query == "hello":
-        speech_text(self,"Hello, I am delta")
+def processor(self, query):
+    speech_text(self,Responser.respond(query))
 
 
 class SpeechRecognitionThread(QThread):
@@ -49,7 +68,7 @@ class SpeechRecognitionThread(QThread):
                 print('User: ' + query + '\n')
                 lastQuery = query
                 
-                responser(self, query) # Send the qurry to responser
+                processor(self, query) # Send the qurry to processor
                 
 
             except sr.UnknownValueError:
@@ -103,7 +122,7 @@ class MyMainWindow(QMainWindow):
     def deltaIntro(self):
         mixer.music.load('media/audio/recognizer-sound.mp3')
         mixer.music.play()
-        engine.say("Hello there! I am Delta, your virtual assistant. How may I help you!")
+        engine.say("Hello {} I am Delta, your virtual assistant. How may I help you!".format(greeting_function()))
         engine.runAndWait()
 
     def start_delta(self):
