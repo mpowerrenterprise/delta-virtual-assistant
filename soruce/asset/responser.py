@@ -1,6 +1,6 @@
 import random
-import datetime
 import wikipedia
+from datetime import datetime
 from googlesearch import search
 
 def google_search(query, num_results=5):
@@ -109,13 +109,24 @@ class Responser:
         elif query in ["tell me a fashion fact", "share a fashion-related fact", "fashion trivia"]:
             return "The high-heeled shoe was originally created for men in the 17th century and later became a symbol of femininity."
 
+        elif "time now" in query:
+            current_time = datetime.now().strftime("%H:%M:%S")
+            return f"The current time is {current_time}"
+
+        elif "date today" in query or "today's date" in query or "what is the date" in query or "what is a date" in query :
+            current_date_and_time = datetime.now().strftime("%Y-%m-%d")
+            return f"The current date is {current_date_and_time}"
+
         elif "tell me about" in query:
             try:
                 newQuery = query.replace("tell me about", "what is ")
-                return wikipedia.summary("{}".format(newQuery), sentences=3)
+                return wikipedia.summary("{}".format(newQuery), sentences=2)
             except Exception as e:
                 return "I'm not sure how to respond to that. Feel free to ask me something else!"
 
         # Default response if the input doesn't match any specific question
         else:
-            return wikipedia.summary(query, sentences=3)
+            try:
+                return wikipedia.summary(query, sentences=2)
+            except Exception as e:
+                return "I'm not sure how to respond to that. Feel free to ask me something else!"

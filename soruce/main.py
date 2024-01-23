@@ -13,6 +13,7 @@ mixer.init()
 engine = pyttsx3.init()
 lastQuery = "Start"
 isDeltaStarted = False
+screen = "[BANNER]"
 
 responseEngine = Responser()
 
@@ -131,29 +132,56 @@ class MyMainWindow(QMainWindow):
         self.speech_recognition_thread.update_signal.connect(self.update_label)  # Connect the signal to the slot
         self.speech_recognition_thread.start()
 
-    def show_second_standby_gif(self):
-        global isDeltaStarted
+    def show_banner_screen(self):
+        self.banner_label.setVisible(True)
+        self.voice_label.setVisible(False)
+        self.standby_label.setVisible(False)
+        self.banner_movie.start()
+
+    def show_voice_screen(self):
+        self.banner_label.setVisible(False)
+        self.voice_label.setVisible(True)
+        self.standby_label.setVisible(False)
+        self.voice_movie.start()
+
+    def show_standby_screen(self):
         self.banner_label.setVisible(False)
         self.voice_label.setVisible(False)
         self.standby_label.setVisible(True)
         self.standby_movie.start()
+
+    def show_second_standby_gif(self):
+        global isDeltaStarted, screen
+
+        if screen == "[BANNER]":
+            self.show_banner_screen()
+
+        elif screen == "[VOICE]":
+            self.show_voice_screen()
+
+        elif screen == "[STANDBY]":
+            self.show_standby_screen()
         
         if isDeltaStarted == False:
             self.start_delta()
+
+            # Show Standby after staring
+            screen = "[STANDBY]"
+            self.show_standby_screen()
+
             isDeltaStarted = True
 
     def update_label(self, message):
-        if message == "voice_screen":
-            self.banner_label.setVisible(False)
-            self.standby_label.setVisible(False)
-            self.voice_label.setVisible(True)
-            self.voice_movie.start()
-        elif message == "standby_screen":
-            self.banner_label.setVisible(False)
-            self.voice_label.setVisible(False)
-            self.standby_label.setVisible(True)
-            self.standby_movie.start()
 
+        global screen;
+
+        if message == "voice_screen":
+            screen = "[VOICE]"
+            self.show_voice_screen()
+
+        elif message == "standby_screen":
+            screen = "[STANDBY]"
+            self.show_standby_screen()
 
     def center_on_screen(self):
         frame_geometry = self.frameGeometry()
