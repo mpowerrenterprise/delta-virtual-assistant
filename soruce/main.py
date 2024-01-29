@@ -6,6 +6,7 @@ from pygame import mixer
 from PyQt5.QtGui import QMovie
 import speech_recognition as sr
 from asset.responser import Responser
+from asset.controller import Controller
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
 
@@ -14,8 +15,6 @@ engine = pyttsx3.init()
 lastQuery = "Start"
 isDeltaStarted = False
 screen = "[BANNER]"
-
-responseEngine = Responser()
 
 def greeting_function():
 
@@ -42,7 +41,16 @@ def speech_text(self, text):
     self.update_signal.emit(f"standby_screen")
    
 def processor(self, query):
-    speech_text(self,Responser.respond(query))
+
+    controllerOutput = Controller.control(query) 
+
+    if controllerOutput != "[NONE]":
+        speech_text(self,controllerOutput)
+    else:
+        responserOutput = Responser.respond(query) 
+        speech_text(self,responserOutput)
+
+
 
 
 class SpeechRecognitionThread(QThread):
@@ -69,7 +77,7 @@ class SpeechRecognitionThread(QThread):
                 print('User: ' + query + '\n')
                 lastQuery = query
                 
-                processor(self, query) # Send the qurry to processor
+                processor(self, query.lower()) # Send the qurry to processor
                 
 
             except sr.UnknownValueError:
