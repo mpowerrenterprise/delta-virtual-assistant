@@ -1,0 +1,7 @@
+pygame
+pyttsx3
+SpeechRecognition
+PyQt5
+googlesearch-python
+wikipedia
+ 
