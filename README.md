@@ -59,7 +59,7 @@ Whether you're looking to streamline your workflow or simply need a helping hand
 - **Step 01:** Navigate to source folder
 
   ```
-    cmd source 
+    cd source 
   ```
 
 - **Step 02:** Run main.py
